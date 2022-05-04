@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sonar-config
+  namespace: my-sonarqube
+  labels:
+    app: sonarqube
+data:
+  SONARQUBE_JDBC_URL: "jdbc:postgresql://postgres:5432/sonar_db"
+  SONARQUBE_JDBC_USERNAME: "sonar_user"
+  SONARQUBE_JDBC_PASSWORD: "FreeForever100%"
+  JAVA_OPTS: "-Duser.timezone=Asia/Bangkok -Xmx2048m"

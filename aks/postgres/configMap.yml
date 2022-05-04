@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres
+  namespace: my-sonarqube
+  labels:
+    app: postgres
+data:
+  POSTGRESQL_USERNAME: sonar_user
+  POSTGRESQL_DATABASE: sonar_db
+  POSTGRESQL_PASSWORD: FreeForever100%

@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sonarqube
+  namespace: my-sonarqube
+  labels:
+    app: sonarqube
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: sonarqube
+  template:
+    metadata:
+      labels:
+        app: sonarqube
+    spec:
+      initContainers:
+      - name: init
+        image: busybox
+        command:
+        - sysctl
+        - -w
+        - vm.max_map_count=524288
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          privileged: true
+      containers:
+      - name: sonarqube
+        image: mc1arke/sonarqube-with-community-branch-plugin:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9000
+        envFrom:
+        - configMapRef:
+            name: sonar-config
+        volumeMounts:
+        - name: app-pvc
+          mountPath: "/opt/sonarqube/data/"
+          subPath: data
+        resources:
+          requests:
+            memory: "1024Mi"
+            cpu: "0.5"
+          limits:
+            memory: "2048Mi"
+            cpu: "1.0"
+      volumes:
+      - name: app-pvc
+        persistentVolumeClaim:
+          claimName: data-sonarqube-pvc

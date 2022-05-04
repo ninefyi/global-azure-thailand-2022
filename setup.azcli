@@ -1,0 +1,11 @@
+az login
+az account set -s "[Subscription name]"
+az group create --name rg-devsecops --location eastasia
+az network public-ip create -g rg-devsecops -n pip-aks-devsecops --dns-name aks-devsecops --allocation-method Static --sku Standard
+az aks create --resource-group rg-devsecops --name aks-devsecops --node-count 3 --node-vm-size Standard_B2s
+az aks install-cli
+az aks get-credentials --name aks-devsecops -g rg-devsecops --admin
+az aks show -g rg-devsecops -n aks-devsecops --query "identity.principalId" -o tsv
+az account show --query "id" -o tsv
+az role assignment create --assignee "answer_line8" --role "Network Contributor" --scope subscriptions/answer_line9/resourceGroups/rg-devsecops
+az network public-ip list -g rg-devsecops -o tsv --query "[].ipAddress"

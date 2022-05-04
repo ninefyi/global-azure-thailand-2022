@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  namespace: my-sonarqube
+spec:
+  replicas: 1
+  selector:
+     matchLabels:
+       app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      terminationGracePeriodSeconds: 30
+      securityContext:
+        fsGroup: 2000
+      containers:
+      - name: postgres
+        image: bitnami/postgresql
+        ports:
+        - containerPort: 5432
+        envFrom:
+        - configMapRef:
+            name: postgres
+        volumeMounts:
+        - name: postgres-volume
+          mountPath: bitnami/postgresql
+        resources:
+          requests:
+            memory: "1024Mi"
+            cpu: "0.5"
+          limits:
+            memory: "2048Mi"
+            cpu: "1.0"
+      volumes:
+      - name: postgres-volume
+        persistentVolumeClaim:
+          claimName: data-postgres-pvc
