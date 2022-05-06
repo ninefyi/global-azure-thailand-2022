@@ -8,6 +8,8 @@
 
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+     <InternalsVisibleTo Include="WeatherForecastApi.Tests" />
   </ItemGroup>
+  
 
 </Project>

@@ -49,12 +49,13 @@ jobs:
         run: |
           dotnet tool install --global dotnet-sonarscanner
           dotnet sonarscanner begin /k:"sonarqube"  /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}" /d:sonar.qualitygate.wait=true /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
-          dotnet build ./TodoApi --configuration Release
+          dotnet build --configuration Release
           dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+        working-directory: $GITHUB_WORKSPACE/source
 
       - name: dotnet publish
         run: dotnet publish -c Release -o $GITHUB_WORKSPACE/publish
-        working-directory: $GITHUB_WORKSPACE/TodoApi
+        working-directory: $GITHUB_WORKSPACE/source
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
