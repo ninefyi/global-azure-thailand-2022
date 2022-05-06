@@ -1,6 +1,7 @@
 name: Scan and Build
 env: # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: "6.0.x"
+  GH_WS: ${{ github.workspace }}
 on:
   workflow_dispatch:
   push:
@@ -51,16 +52,16 @@ jobs:
           dotnet sonarscanner begin /k:"sonarqube"  /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}" /d:sonar.qualitygate.wait=true /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
           dotnet build --configuration Release
           dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
-        working-directory: ${{GITHUB_WORKSPACE}}/source
+        working-directory: ${{ env.GH_WS }}/source
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o $GITHUB_WORKSPACE/publish
-        working-directory: $GITHUB_WORKSPACE/source
+        run: dotnet publish -c Release -o ${{ env.GH_WS }}/publish
+        working-directory: ${{ env.GH_WS }}/source
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
           name: .net-app
-          path: $GITHUB_WORKSPACE/publish
+          path: ${{ env.GH_WS }}/publish
 
 
