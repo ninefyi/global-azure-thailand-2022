@@ -51,7 +51,7 @@ jobs:
           dotnet sonarscanner begin /k:"sonarqube"  /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}" /d:sonar.qualitygate.wait=true /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
           dotnet build --configuration Release
           dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
-        working-directory: $GITHUB_WORKSPACE/source
+        working-directory: ${{GITHUB_WORKSPACE}}/source
 
       - name: dotnet publish
         run: dotnet publish -c Release -o $GITHUB_WORKSPACE/publish
