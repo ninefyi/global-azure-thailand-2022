@@ -4,7 +4,7 @@ env:
   GH_WS: ${{ github.workspace }}
   PR_KY: ${{ github.event.number }}
   PR_BRANCH: ${{ github.head_ref }}
-  PR_BASE: master
+  PR_BASE: ${{ github.base_ref }}
 on:
   workflow_dispatch:
   push:
