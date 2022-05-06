@@ -21,7 +21,7 @@ public class WeatherForecastApiTest
         await using var application = new WeatherForecastApplication();
 
         var client = application.CreateClient();
-        var weatherforecast = await client.GetFromJsonAsync<List<MyWeatherForecast.WeatherForecast>>("/weatherforecast");
+        var weatherforecast = await client.GetFromJsonAsync<List<WeatherForecast>>("/weatherforecast");
         
         if(weatherforecast != null){
             Assert.Equal(5, weatherforecast.Count);
@@ -34,16 +34,6 @@ class WeatherForecastApplication : WebApplicationFactory<Program>
 {
     protected override IHost CreateHost(IHostBuilder builder)
     {
-        // var root = new InMemoryDatabaseRoot();
-
-        // builder.ConfigureServices(services =>
-        // {
-        //     services.RemoveAll(typeof(DbContextOptions<TodoDbContext>));
-
-        //     services.AddDbContext<TodoDbContext>(options =>
-        //         options.UseInMemoryDatabase("Testing", root));
-        // });
-
         return base.CreateHost(builder);
     }
 }
