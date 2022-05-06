@@ -1,5 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -46,5 +44,3 @@ namespace MyWeatherForecast
         public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
     }
 }
-[ExcludeFromCodeCoverage]
-public partial class Program { }
