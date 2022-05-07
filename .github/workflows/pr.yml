@@ -1,4 +1,4 @@
-name: Scan and Build
+name: Scan and Build for PR
 env:
   DOTNET_VERSION: "6.0.x"
   GH_WS: ${{ github.workspace }}
