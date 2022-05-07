@@ -1,4 +1,4 @@
-name: Scan and Build
+name: Scan and Build for PR
 env:
   DOTNET_VERSION: "6.0.x"
   GH_WS: ${{ github.workspace }}
@@ -7,9 +7,6 @@ env:
   PR_BASE: ${{ github.base_ref }}
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main # or the name of your main branch
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
