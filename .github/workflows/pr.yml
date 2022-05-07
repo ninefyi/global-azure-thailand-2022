@@ -13,23 +13,6 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
-  # sonarqube:
-  #   name: SonarQube Scan
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #       with:
-  #         fetch-depth: 0
-  #     - uses: sonarsource/sonarqube-scan-action@master
-  #       env:
-  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-  #         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-  #     - name: SonarQube Quality Gate check
-  #       uses: sonarsource/sonarqube-quality-gate-action@master
-  #       # Force to fail step after specific time
-  #       timeout-minutes: 5
-  #       env:
-  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   build:
     name: Build
     runs-on: ubuntu-latest
