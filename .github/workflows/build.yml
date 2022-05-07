@@ -1,0 +1,49 @@
+name: Scan and Build
+env:
+  DOTNET_VERSION: "6.0.x"
+  GH_WS: ${{ github.workspace }}
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main # or the name of your main branch
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    # needs: sonarqube
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Set up dependency caching for faster builds
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Sonar Scan
+        run: |
+          dotnet tool install --global dotnet-sonarscanner
+          dotnet sonarscanner begin /k:"sonarqube" /d:sonar.exclusions="**/Program.cs" /d:sonar.cs.vscoveragexml.reportsPaths=${{ env.GH_WS }}/source/TestResults/*.coveragexml /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}" /d:sonar.qualitygate.wait=true /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+          dotnet build --configuration Release
+          dotnet test --collect "Code Coverage" --logger trx --results-directory "TestsResults"
+          dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+        working-directory: ${{ env.GH_WS }}/source
+
+      - name: dotnet publish
+        run: dotnet publish -c Release -o ${{ env.GH_WS }}/publish
+        working-directory: ${{ env.GH_WS }}/source
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v3
+        with:
+          name: .net-app
+          path: ${{ env.GH_WS }}/publish
+
+
