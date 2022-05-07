@@ -21,7 +21,7 @@ public class WeatherForecastApiTest
         await using var application = new WeatherForecastApplication();
 
         var client = application.CreateClient();
-        var weatherforecast = await client.GetFromJsonAsync<List<WeatherForecast>>("/weatherforecast");
+        var weatherforecast = await client.GetFromJsonAsync<List<MyWeatherForecastApi.WeatherForecast>>("/weatherforecast");
         
         if(weatherforecast != null){
             Assert.Equal(5, weatherforecast.Count);

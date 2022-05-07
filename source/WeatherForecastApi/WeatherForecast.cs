@@ -1,4 +1,8 @@
-    record WeatherForecast(DateTime Date, int TemperatureC, string? Summary)
+    namespace MyWeatherForecastApi
     {
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.556);
+        record WeatherForecast(DateTime Date, int TemperatureC, string? Summary)
+        {
+            public int TemperatureF => 32 + (int)(TemperatureC / 0.556);
+        }
     }
+    
