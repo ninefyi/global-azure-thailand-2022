@@ -1,7 +1,10 @@
 name: Scan and Build
-env: # set this to the path to your web app project, defaults to the repository root
+env:
   DOTNET_VERSION: "6.0.x"
   GH_WS: ${{ github.workspace }}
+  PR_KY: ${{ github.event.number }}
+  PR_BRANCH: ${{ github.head_ref }}
+  PR_BASE: ${{ github.base_ref }}
 on:
   workflow_dispatch:
   push:
@@ -49,7 +52,7 @@ jobs:
       - name: Sonar Scan
         run: |
           dotnet tool install --global dotnet-sonarscanner
-          dotnet sonarscanner begin /k:"sonarqube" /d:sonar.exclusions="**/Program.cs" /d:sonar.cs.vscoveragexml.reportsPaths=${{ env.GH_WS }}/source/TestResults/*.coveragexml /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}" /d:sonar.qualitygate.wait=true /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+          dotnet sonarscanner begin /k:"sonarqube" /d:sonar.pullrequest.key=${{ env.PR_KY }} /d:sonar.pullrequest.branch=${{ env.PR_BRANCH }} /d:sonar.pullrequest.base=${{ env.PR_BASE }} /d:sonar.exclusions="**/Program.cs" /d:sonar.cs.vscoveragexml.reportsPaths=${{ env.GH_WS }}/source/TestResults/*.coveragexml /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}" /d:sonar.qualitygate.wait=true /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
           dotnet build --configuration Release
           dotnet test --collect "Code Coverage" --logger trx --results-directory "TestsResults"
           dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
